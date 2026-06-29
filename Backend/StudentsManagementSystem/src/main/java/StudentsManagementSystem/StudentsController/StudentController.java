@@ -19,6 +19,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import StudentsManagementSystem.StudentsServices.StudentServices;
+import jakarta.validation.Valid;
 import StudentsManagementSystem.StudentsModel.StudentModel;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -29,7 +30,7 @@ public class StudentController {
 	private StudentServices studentservices;
 	
 	@PostMapping("/add")
-	public StudentModel addStudent(@RequestBody StudentModel studentmodel) {
+	public StudentModel addStudent(@Valid @RequestBody StudentModel studentmodel) {
 		return studentservices.addStudent(studentmodel);
 	}
 	
@@ -39,7 +40,7 @@ public class StudentController {
 	}
 	
 	@PutMapping("/update/{id}")
-	public StudentModel updateStudent(@PathVariable String id, @RequestBody StudentModel studentmodel) {
+	public StudentModel updateStudent(@PathVariable String id,@Valid @RequestBody StudentModel studentmodel) {
 		return studentservices.updateStudent(id,studentmodel);
 	}
 	

@@ -17,7 +17,7 @@ public class StudentsManagementSystemApplication {
 Day1:
 - Created project structure from Spring Initializer.
 -- Dependencies:-
-                 1. Spring Web:- used for REST APIs, Controllers and HTTP requests.
+                 1. Spring Web:- used for REST APIs, Controllers and HTTP requests and uses deafult apache tomcat server.
                  2. Spring Data MongoDB:- used for connecting MongoDB, database operations and Repository layer.
 				 3. Lombok:- used for automatically generating getters, setters and constructors.
 				 4. Spring Boot DevTools:- used for auto restart and faster development.
@@ -88,5 +88,31 @@ Day3:
 				 ↓
 			MongoDB
 --------------------------------------------------------------------------------------------------------------------------------------
+Day 4:
+      Implemented Bean Validation for Student API.
+
+Validation:-
+      Validation ensures only valid data is accepted before storing it in MongoDB.
+
+Added Dependency:
+      spring-boot-starter-validation → Provides validation annotations.
+
+Annotations Used:-
+
+1. @NotBlank
+      Field cannot be null, empty, or contain only spaces.
+
+2. @Email
+      Checks whether the email follows a valid email format.
+      Does not verify if the email actually exists.
+
+3. @Min and @Max
+      Restrict numeric values within a specified range.
+      Used to validate the student's age.
+
+4. @Valid
+      Applied in the Controller before @RequestBody.
+      Automatically validates the incoming request.
+      If validation fails, the request never reaches the Service layer.
 
 */
