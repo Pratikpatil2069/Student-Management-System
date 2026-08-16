@@ -24,7 +24,7 @@ Day1:
 
 - Connected MongoDB:-
 		-- application.properties:-
-			  spring.data.mongodb.uri=mongodb://localhost:27017/studentdb
+			  spring.mongodb.uri=mongodb://localhost:27017/studentdb
 
 		-- This connects the application to MongoDB.
 		-- If studentdb is not present, MongoDB creates it automatically when the first document is inserted.
@@ -114,5 +114,7 @@ Annotations Used:-
       Applied in the Controller before @RequestBody.
       Automatically validates the incoming request.
       If validation fails, the request never reaches the Service layer.
+      
+-----------------------------------------------------------------------------------------------------------------------------------------
 
 */

@@ -7,4 +7,5 @@ import StudentsManagementSystem.StudentsModel.StudentModel;
 
 @Repository
 public interface StudentRepository extends MongoRepository<StudentModel,String> {
+	  boolean existsByEmail(String email);
 }

@@ -2,6 +2,7 @@ package StudentsManagementSystem.StudentsController;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,7 @@ public class StudentController {
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public Optional<StudentModel> deleteStudent(@PathVariable String id) {
+	public StudentModel deleteStudent(@PathVariable String id) {
 		return studentservices.deleteStudent(id);
 	}
 	
