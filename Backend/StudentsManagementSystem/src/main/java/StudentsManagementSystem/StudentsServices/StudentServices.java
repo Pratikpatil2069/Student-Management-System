@@ -1,13 +1,13 @@
 package StudentsManagementSystem.StudentsServices;
 
 import java.util.List;
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import StudentsManagementSystem.Exceptions.DuplicateEmailException;
-import StudentsManagementSystem.Exceptions.StudentNotFoundException;
+
+import StudentsManagementSystem.Exceptions.ResourceException;
 import StudentsManagementSystem.StudentsModel.StudentModel;
 import StudentsManagementSystem.StudentsRepository.StudentRepository;
 
@@ -19,7 +19,7 @@ public class StudentServices {
 	
 	public StudentModel addStudent(StudentModel studentmodel) {
 		  if (studentrepository.existsByEmail(studentmodel.getEmail())) {
-			  throw new DuplicateEmailException(
+			  throw new ResourceException(
 		                "Student already exists with email: " + studentmodel.getEmail()
 		        );		    
 			  }
@@ -27,11 +27,11 @@ public class StudentServices {
 	}
 	
 	public StudentModel updateStudent(String id, StudentModel studentmodel) {
-		StudentModel student=studentrepository.findById(id).orElseThrow(()->new StudentNotFoundException("Student Not Found with id: "+id));
+		StudentModel student=studentrepository.findById(id).orElseThrow(()->new ResourceException("Student Not Found with id: "+id));
 		
 		if(student!=null) {
 			if (studentrepository.existsByEmail(studentmodel.getEmail())) {
-				  throw new DuplicateEmailException(
+				  throw new ResourceException(
 			                "Student already exists with email: " + studentmodel.getEmail()
 			        );
 			}
@@ -45,7 +45,7 @@ public class StudentServices {
 
 	
 	public StudentModel deleteStudent(String id) {
-		StudentModel student=studentrepository.findById(id).orElseThrow(()->new StudentNotFoundException("Student Not Found with id: "+id));
+		StudentModel student=studentrepository.findById(id).orElseThrow(()->new ResourceException("Student Not Found with id: "+id));
 		 studentrepository.deleteById(id);
 		 return student;
 	}
@@ -56,7 +56,7 @@ public class StudentServices {
 	
 	
 	public StudentModel getStudentById(String id) {
-	    return studentrepository.findById(id).orElseThrow(()->new StudentNotFoundException("Student Not Found with id: "+id));
+	    return studentrepository.findById(id).orElseThrow(()->new ResourceException("Student Not Found with id: "+id));
 	}
 
 

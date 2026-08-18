@@ -116,5 +116,19 @@ Annotations Used:-
       If validation fails, the request never reaches the Service layer.
       
 -----------------------------------------------------------------------------------------------------------------------------------------
+ Day 5:-
+ 		Handle Locally exceptions.
+ 	
+ 	1.Validation Exception:- 
+ 						The StudentModel Contains Some Validations Like NotNull, NotBlank, Min and Max.
+ 						so if the data comes from frontend  it does have this type of issue then data get not store in data base so it gets Exception.
+ 						
+ 	2. StudentNotFoundException:-
+ 						To Find the Contact with id ,if Not found then give Exceptions
+ 						So the Create your own Exception class like Exception and extends with RuntimeException and display our own message through constructor of RuntimeException.
+ 						
+ 	3. DuplicateEmailException:-
+ 						if Email are gets duplicate then this exception occures.
+ 						So the Create your own Exception class like Exception and extends with RuntimeException and display our own message through constructor of RuntimeException.
 
 */
