@@ -131,4 +131,26 @@ Annotations Used:-
  						if Email are gets duplicate then this exception occures.
  						So the Create your own Exception class like Exception and extends with RuntimeException and display our own message through constructor of RuntimeException.
 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Day 6:-
+		Manage Http code Through ResponseEntity<>
+		
+		200 ok → Request successful
+		201 created → New resource created
+		204 → Successfully deleted, no response body
+		
+		400 → You sent a bad/invalid request
+		404 → Endpoint/resource not found
+		409 → Conflict, e.g. duplicate email
+		500 → Unexpected server error
+		
+		1.POST:- return ResponseEntity.status(HttpStatus.Created).body(student)
+		
+		2.GET:- return ResponseEntity.ok(student)
+		
+		3.PUT:- return ResponseEntity.ok(student)
+		
+		4.DELETE:- Return ResponseEntity.noContent().build()
+		
+		
 */
