@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 
 import StudentsManagementSystem.StudentsServices.StudentServices;
 import jakarta.validation.Valid;
+import StudentsManagementSystem.Response.ResponseApi;
 import StudentsManagementSystem.StudentsModel.StudentModel;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -34,33 +36,53 @@ public class StudentController {
 	private StudentServices studentservices;
 	
 	@PostMapping("/add")
-	public ResponseEntity<StudentModel> addStudent(@Valid @RequestBody StudentModel studentmodel) {
+	public ResponseEntity<ResponseApi<StudentModel>> addStudent(@Valid @RequestBody StudentModel studentmodel) {
+		
 		StudentModel student= studentservices.addStudent(studentmodel);
-		return ResponseEntity.status(HttpStatus.CREATED).body(student);
+		
+		ResponseApi<StudentModel> response = new ResponseApi<>(true,"Student created successfully",student,LocalDateTime.now());
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Void> deleteStudent(@PathVariable String id) {
+	public ResponseEntity<ResponseApi<Void>> deleteStudent(@PathVariable String id) {
+		
 		 studentservices.deleteStudent(id);
-		 return ResponseEntity.noContent().build();
+		 
+		 ResponseApi<Void>response=new ResponseApi<>(true,"Student deleted successfully",null,LocalDateTime.now());
+		 
+		 return ResponseEntity.ok(response);
 	}
 	
 	@PutMapping("/update/{id}")
-	public ResponseEntity<StudentModel> updateStudent(@PathVariable String id,@Valid @RequestBody StudentModel studentmodel) {
+	public ResponseEntity<ResponseApi<StudentModel>> updateStudent(@PathVariable String id,@Valid @RequestBody StudentModel studentmodel) {
+		
 		StudentModel UpdatedStudent= studentservices.updateStudent(id,studentmodel);
-		return ResponseEntity.ok(UpdatedStudent);
+		
+		ResponseApi<StudentModel>response =new ResponseApi<>(true, "Student updated successfully",UpdatedStudent,LocalDateTime.now());
+		
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/getAll")
-	public ResponseEntity<List<StudentModel>> getAllStudent() {
+	public ResponseEntity<ResponseApi<List<StudentModel>>> getAllStudent() {
+		
 		List<StudentModel> list= studentservices.getAllStudent();
-		return ResponseEntity.ok(list);
+		
+		ResponseApi<List<StudentModel>>response=new ResponseApi<>(true,"Students Fetched successfully", list,LocalDateTime.now());
+		
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/getById/{id}")
-	public ResponseEntity<StudentModel> getStudentById(@PathVariable String id) {
+	public ResponseEntity<ResponseApi<StudentModel>> getStudentById(@PathVariable String id) {
+		
 	    StudentModel student= studentservices.getStudentById(id);
-	    return ResponseEntity.ok(student);
+	    
+	    ResponseApi<StudentModel>response=new ResponseApi<>(true, "Student Fetched successfully", student, LocalDateTime.now());
+	    
+	    return ResponseEntity.ok(response);
 	    
 	}
 

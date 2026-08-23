@@ -152,5 +152,15 @@ Day 6:-
 		
 		4.DELETE:- Return ResponseEntity.noContent().build()
 		
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+Day 7:-
+		Global Exception and Handle Custom API Response using ResponseApi<T> class.
 		
+			* Creted Api Response class for better response.
+		
+			* Then handle this exceptions like validation, internal, StudentNotFound and Duplicate Email for this i created global exception handling calss.
+			
+			*@RestContarollerAdvice :- this is class level exception, used to when exception occurs in controller then it goes to first @RestController advice. 
+			
+			*@ExceptionHandler:- this is Method level exception , used to When  particular exception occurs, execute this method.
 */
