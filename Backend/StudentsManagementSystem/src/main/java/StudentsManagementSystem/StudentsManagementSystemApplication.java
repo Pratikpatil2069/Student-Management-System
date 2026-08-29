@@ -163,4 +163,13 @@ Day 7:-
 			*@RestContarollerAdvice :- this is class level exception, used to when exception occurs in controller then it goes to first @RestController advice. 
 			
 			*@ExceptionHandler:- this is Method level exception , used to When  particular exception occurs, execute this method.
+			*
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Day 8:-
+		 DTO (Data Transfer Object)
+
+				DTO is an object used to transfer data between the client, controller, service, and database layers without directly exposing the database model.
+`				RequestDTO` handles client input, while `ResponseDTO` controls the data returned to the client.
+
+
 */

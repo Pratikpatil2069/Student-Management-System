@@ -1,9 +1,12 @@
 package StudentsManagementSystem.Exceptions;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -49,13 +52,18 @@ public class GlobalExceptionHandler {
 
     // 400 - Validation Error
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResponseApi<Void>> handleValidationException(
+    public ResponseEntity<ResponseApi<Map<String, String>>> handleValidationException(
             MethodArgumentNotValidException ex) {
+    	 Map<String, String> errors = new HashMap<>();
 
-        ResponseApi<Void> response = new ResponseApi<>(
+    	    for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+    	        errors.put(error.getField(), error.getDefaultMessage());
+    	    }
+
+        ResponseApi<Map<String, String>> response = new ResponseApi<>(
                 false,
                 "Validation failed",
-                null,
+                errors,
                 LocalDateTime.now()
         );
 

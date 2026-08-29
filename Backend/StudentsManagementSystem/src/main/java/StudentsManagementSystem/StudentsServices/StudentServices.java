@@ -1,5 +1,6 @@
 package StudentsManagementSystem.StudentsServices;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 
 import StudentsManagementSystem.Exceptions.ResourceNotFoundException;
+import StudentsManagementSystem.StudentsDTO.StudentRequest;
+import StudentsManagementSystem.StudentsDTO.StudentResponse;
 import StudentsManagementSystem.Exceptions.DuplicateResourceException;
 import StudentsManagementSystem.StudentsModel.StudentModel;
 import StudentsManagementSystem.StudentsRepository.StudentRepository;
@@ -17,48 +20,100 @@ import StudentsManagementSystem.StudentsRepository.StudentRepository;
 public class StudentServices {
 	
 	@Autowired
-	private StudentRepository studentrepository;
+	private StudentRepository studentRepository;
 	
-	public StudentModel addStudent(StudentModel studentmodel) {
-		  if (studentrepository.existsByEmail(studentmodel.getEmail())) {
+	public StudentResponse addStudent(StudentRequest studentRequest) {
+		  if (studentRepository.existsByEmail(studentRequest.getEmail())) {
 			  throw new DuplicateResourceException(
-		                "Student already exists with email: " + studentmodel.getEmail()
+		                "Student already exists with email: " + studentRequest.getEmail()
 		        );		    
 			  }
-		return studentrepository.save(studentmodel);
+		    StudentModel studentModel = new StudentModel();
+
+		    studentModel.setName(studentRequest.getName());
+		    studentModel.setEmail(studentRequest.getEmail());
+		    studentModel.setAge(studentRequest.getAge());
+		    
+		    StudentModel response=studentRepository.save(studentModel);
+		    
+		    StudentResponse studentResponse = new StudentResponse();
+
+		    studentResponse.setId(response.getId());
+		    studentResponse.setName(response.getName());
+		    studentResponse.setEmail(response.getEmail());
+		    studentResponse.setAge(response.getAge());
+		return studentResponse;
 	}
 	
-	public StudentModel updateStudent(String id, StudentModel studentmodel) {
-		StudentModel student=studentrepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
+	public StudentResponse updateStudent(String id, StudentRequest studentRequest) {
+		StudentModel student=studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
 		
-		if(student!=null) {
-			if (studentrepository.existsByEmail(studentmodel.getEmail())) {
+			if (studentRepository.existsByEmail(studentRequest.getEmail())) {
 				  throw new DuplicateResourceException(
-			                "Student already exists with email: " + studentmodel.getEmail()
+			                "Student already exists with email: " + studentRequest.getEmail()
 			        );
 			}
-			student.setName(studentmodel.getName());
-            student.setEmail(studentmodel.getEmail());
-            student.setAge(studentmodel.getAge());
-            return studentrepository.save(student);
+			 StudentModel studentModel = new StudentModel();
+
+			 studentModel.setName(studentRequest.getName());
+			 studentModel.setEmail(studentRequest.getEmail());
+			 studentModel.setAge(studentRequest.getAge());
+			 
+			StudentModel response=studentRepository.save(studentModel);
+			
+			StudentResponse studentResponse=new StudentResponse();
+			
+			studentResponse.setId(response.getId());
+			studentResponse.setName(response.getName());
+			studentResponse.setEmail(response.getEmail());
+			studentResponse.setAge(response.getAge());
+			
+	        return studentResponse;
+		
+	}
+
+	
+	public void deleteStudent(String id) {
+		StudentModel student=studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
+		
+		 studentRepository.deleteById(id);
+		 
+	}
+
+	public List<StudentResponse> getAllStudent() {
+		
+		List<StudentModel> list= studentRepository.findAll();
+		
+		List<StudentResponse>response=new ArrayList<>();
+		
+		for(StudentModel student: list) {
+			
+			StudentResponse studentResponse=new StudentResponse();
+			
+			studentResponse.setId(student.getId());
+			studentResponse.setName(student.getName());
+			studentResponse.setEmail(student.getEmail());
+			studentResponse.setAge(student.getAge());
+			
+			response.add(studentResponse);
 		}
-		return null ;
-	}
-
-	
-	public StudentModel deleteStudent(String id) {
-		StudentModel student=studentrepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
-		 studentrepository.deleteById(id);
-		 return student;
-	}
-
-	public List<StudentModel> getAllStudent() {
-		return studentrepository.findAll();
+		
+		return response;
 	}
 	
 	
-	public StudentModel getStudentById(String id) {
-	    return studentrepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
+	public StudentResponse getStudentById(String id) {
+		
+	    StudentModel response= studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
+	    
+	    StudentResponse studentResponse=new StudentResponse();
+		
+		studentResponse.setId(response.getId());
+		studentResponse.setName(response.getName());
+		studentResponse.setEmail(response.getEmail());
+		studentResponse.setAge(response.getAge());
+	    
+	    return studentResponse;
 	}
 
 
