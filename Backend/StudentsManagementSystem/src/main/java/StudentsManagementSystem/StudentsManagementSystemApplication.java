@@ -171,5 +171,20 @@ Day 8:-
 				DTO is an object used to transfer data between the client, controller, service, and database layers without directly exposing the database model.
 `				RequestDTO` handles client input, while `ResponseDTO` controls the data returned to the client.
 
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Day 9:-
+		 Pagination:-
 
+				Pagination is used to divide a large number of records into smaller pages instead of returning all records at once.
+				Ex= ?page=0&size=2.
+				
+		 Sorting:-
+
+				Sorting is used to arrange records according to a particular field in ascending or descending order.	
+				Ex= ?page=0&size=2&sort=name,asc.	
+				
+		Searching:-
+				search the record by using name .
+				Ex= ?page=0&size=2&sort=name,asc&name=pra
+				
 */

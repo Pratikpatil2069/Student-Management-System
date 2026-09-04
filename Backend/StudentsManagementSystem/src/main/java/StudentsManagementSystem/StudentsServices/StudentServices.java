@@ -1,12 +1,18 @@
 package StudentsManagementSystem.StudentsServices;
 
+
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
+
 
 
 import StudentsManagementSystem.Exceptions.ResourceNotFoundException;
@@ -46,14 +52,13 @@ public class StudentServices {
 	}
 	
 	public StudentResponse updateStudent(String id, StudentRequest studentRequest) {
-		StudentModel student=studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
+		StudentModel studentModel=studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
 		
 			if (studentRepository.existsByEmail(studentRequest.getEmail())) {
 				  throw new DuplicateResourceException(
 			                "Student already exists with email: " + studentRequest.getEmail()
 			        );
 			}
-			 StudentModel studentModel = new StudentModel();
 
 			 studentModel.setName(studentRequest.getName());
 			 studentModel.setEmail(studentRequest.getEmail());
@@ -74,31 +79,47 @@ public class StudentServices {
 
 	
 	public void deleteStudent(String id) {
-		StudentModel student=studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
+		if(studentRepository.existsById(id)) {
+			
+			studentRepository.deleteById(id);
+			
+		}else {
+			
+			 throw new ResourceNotFoundException("Student Not Found with id: "+id);
+			 
+		}
 		
-		 studentRepository.deleteById(id);
 		 
 	}
 
-	public List<StudentResponse> getAllStudent() {
+	public List<StudentResponse> getAllStudent(String name , Pageable pageable) {
 		
-		List<StudentModel> list= studentRepository.findAll();
-		
-		List<StudentResponse>response=new ArrayList<>();
-		
-		for(StudentModel student: list) {
-			
-			StudentResponse studentResponse=new StudentResponse();
-			
-			studentResponse.setId(student.getId());
-			studentResponse.setName(student.getName());
-			studentResponse.setEmail(student.getEmail());
-			studentResponse.setAge(student.getAge());
-			
-			response.add(studentResponse);
-		}
-		
-		return response;
+			List<StudentModel>list;
+			if (name == null || name.isBlank()) {
+				
+					list = studentRepository.findAll(pageable).getContent();
+		    } else {
+		    	
+		        	list = studentRepository.findByNameContainingIgnoreCase(name, pageable).getContent();
+		    }
+
+	    
+
+	    List<StudentResponse> response = new ArrayList<>();
+
+	    for (StudentModel student : list) {
+
+	        StudentResponse studentResponse = new StudentResponse();
+
+	        studentResponse.setId(student.getId());
+	        studentResponse.setName(student.getName());
+	        studentResponse.setEmail(student.getEmail());
+	        studentResponse.setAge(student.getAge());
+
+	        response.add(studentResponse);
+	    }
+
+	    return response;
 	}
 	
 	

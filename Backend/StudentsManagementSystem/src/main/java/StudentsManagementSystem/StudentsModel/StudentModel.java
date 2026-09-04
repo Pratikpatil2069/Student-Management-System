@@ -27,5 +27,6 @@ public class StudentModel {
     @Min(value=1, message="age must be greater than 0")
     @Max(value=100, message="age must be less or equal to 100")
     private Integer age;
+    
 	
 }
