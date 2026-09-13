@@ -12,8 +12,14 @@ import StudentsManagementSystem.StudentsModel.StudentModel;
 
 @Repository
 public interface StudentRepository extends MongoRepository<StudentModel,String> {
+	
 	  boolean existsByEmail(String email);
 	  
 	  Page<StudentModel> findByNameContainingIgnoreCase(String name, Pageable pageable);
 	  
+	  Page<StudentModel> findByAgeGreaterThanEqual(Integer minAge, Pageable pageable);
+	  
+	  Page<StudentModel> findByAgeLessThanEqual(Integer maxAge, Pageable pageable);
+	  
+	  Page<StudentModel> findByAgeBetween(Integer minAge, Integer maxAge, Pageable pageable);
 }

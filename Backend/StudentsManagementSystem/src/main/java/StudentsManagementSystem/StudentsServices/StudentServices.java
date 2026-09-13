@@ -92,12 +92,26 @@ public class StudentServices {
 		 
 	}
 
-	public List<StudentResponse> getAllStudent(String name , Pageable pageable) {
+	public List<StudentResponse> getAllStudent(String name ,Integer minAge, Integer maxAge, Pageable pageable) {
 		
 			List<StudentModel>list;
+			
 			if (name == null || name.isBlank()) {
 				
+				if(minAge!=null && maxAge!=null) {
+					list=studentRepository.findByAgeBetween(minAge, maxAge, pageable).getContent();
+					
+				}else if(minAge!=null) {
+					list=studentRepository.findByAgeGreaterThanEqual(minAge, pageable).getContent();
+					
+				}else if(maxAge!=null) {
+					list=studentRepository.findByAgeLessThanEqual(maxAge, pageable).getContent();
+					
+				}else {
 					list = studentRepository.findAll(pageable).getContent();
+				}
+				
+					
 		    } else {
 		    	
 		        	list = studentRepository.findByNameContainingIgnoreCase(name, pageable).getContent();

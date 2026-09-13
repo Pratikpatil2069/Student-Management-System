@@ -70,9 +70,9 @@ public class StudentController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<ResponseApi<List<StudentResponse>>> getAllStudent(@RequestParam(required= false) String name, Pageable pageable) {
+	public ResponseEntity<ResponseApi<List<StudentResponse>>> getAllStudent(@RequestParam(required= false) String name,@RequestParam(required=false) Integer minAge, @RequestParam(required=false) Integer maxAge, Pageable pageable) {
 		
-		List<StudentResponse> list= studentservices.getAllStudent(name, pageable);
+		List<StudentResponse> list= studentservices.getAllStudent(name,minAge,maxAge, pageable);
 		
 		ResponseApi<List<StudentResponse>>response=new ResponseApi<>(true,"Students Fetched successfully", list,LocalDateTime.now());
 		
