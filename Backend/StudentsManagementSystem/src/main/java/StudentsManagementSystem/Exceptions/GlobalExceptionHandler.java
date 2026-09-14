@@ -1,6 +1,7 @@
 package StudentsManagementSystem.Exceptions;
 
 import java.time.LocalDateTime;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,15 +13,17 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import StudentsManagementSystem.Response.ResponseApi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
+	private static final Logger logger=LoggerFactory.getLogger(GlobalExceptionHandler.class);
     // 404 - Resource Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ResponseApi<Void>> handleResourceNotFound(
             ResourceNotFoundException ex) {
-
+    	logger.warn(ex.getMessage());
     	ResponseApi<Void> response = new ResponseApi<>(
                 false,
                 ex.getMessage(),
@@ -37,7 +40,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ResponseApi<Void>> handleDuplicateResource(
             DuplicateResourceException ex) {
-
+    	logger.warn(ex.getMessage());
+    	
     	ResponseApi<Void> response = new ResponseApi<>(
                 false,
                 ex.getMessage(),
@@ -54,6 +58,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ResponseApi<Map<String, String>>> handleValidationException(
             MethodArgumentNotValidException ex) {
+    	
+    	logger.error("Validation Failed");
+    	
     	 Map<String, String> errors = new HashMap<>();
 
     	    for (FieldError error : ex.getBindingResult().getFieldErrors()) {
@@ -74,9 +81,10 @@ public class GlobalExceptionHandler {
 
     // 500 - Unexpected Error
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseApi<Void>> handleGlobalException(
-            Exception ex) {
-
+    public ResponseEntity<ResponseApi<Void>> handleGlobalException( Exception ex) {
+    		
+    	logger.error("Unexpected error occurred", ex);
+    	
     	ResponseApi<Void> response = new ResponseApi<>(
                 false,
                 "Something went wrong",

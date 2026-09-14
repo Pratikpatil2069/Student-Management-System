@@ -184,7 +184,7 @@ Day 9:-
 				Ex= ?page=0&size=2&sort=name,asc.	
 				
 		Searching:-
-				search the record by using name .
+				search the record by using name and maxAge And minAge .
 				Ex= ?page=0&size=2&sort=name,asc&name=pra
 				
 */

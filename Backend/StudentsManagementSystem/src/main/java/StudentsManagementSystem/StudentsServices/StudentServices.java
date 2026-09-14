@@ -3,13 +3,15 @@ package StudentsManagementSystem.StudentsServices;
 
 
 import java.util.ArrayList;
+
+
+
 import java.util.List;
 
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
@@ -21,18 +23,27 @@ import StudentsManagementSystem.StudentsDTO.StudentResponse;
 import StudentsManagementSystem.Exceptions.DuplicateResourceException;
 import StudentsManagementSystem.StudentsModel.StudentModel;
 import StudentsManagementSystem.StudentsRepository.StudentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory; 
 
 @Service
 public class StudentServices {
+	
+	private static final Logger logger = LoggerFactory.getLogger(StudentServices.class);
 	
 	@Autowired
 	private StudentRepository studentRepository;
 	
 	public StudentResponse addStudent(StudentRequest studentRequest) {
+		
+		logger.info("Adding new student with email: {}", studentRequest.getEmail());
+		
 		  if (studentRepository.existsByEmail(studentRequest.getEmail())) {
-			  throw new DuplicateResourceException(
-		                "Student already exists with email: " + studentRequest.getEmail()
-		        );		    
+			  
+			  logger.warn( "Student already exists with email: {}", studentRequest.getEmail());
+			  
+			  throw new DuplicateResourceException("Student already exists with email: " + studentRequest.getEmail());	
+			  
 			  }
 		    StudentModel studentModel = new StudentModel();
 
@@ -48,13 +59,22 @@ public class StudentServices {
 		    studentResponse.setName(response.getName());
 		    studentResponse.setEmail(response.getEmail());
 		    studentResponse.setAge(response.getAge());
+		    
+		    logger.info("Student created successfully with id: {}",studentResponse.getId());
+		    
 		return studentResponse;
 	}
 	
 	public StudentResponse updateStudent(String id, StudentRequest studentRequest) {
+		
+		logger.info("Student updating of id :{}",id);
+		
 		StudentModel studentModel=studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
 		
 			if (studentRepository.existsByEmail(studentRequest.getEmail())) {
+				
+				logger.warn("Student Already exists with this email:{} ",studentRequest.getEmail());
+				
 				  throw new DuplicateResourceException(
 			                "Student already exists with email: " + studentRequest.getEmail()
 			        );
@@ -73,6 +93,8 @@ public class StudentServices {
 			studentResponse.setEmail(response.getEmail());
 			studentResponse.setAge(response.getAge());
 			
+			logger.info("Student updated successfully with id:{}",id);
+			
 	        return studentResponse;
 		
 	}
@@ -82,8 +104,11 @@ public class StudentServices {
 		if(studentRepository.existsById(id)) {
 			
 			studentRepository.deleteById(id);
+			logger.info("Students deleted successfully of id:{}",id);
 			
 		}else {
+			
+			logger.warn("Student does not exists with id:{}",id);
 			
 			 throw new ResourceNotFoundException("Student Not Found with id: "+id);
 			 
@@ -93,6 +118,8 @@ public class StudentServices {
 	}
 
 	public List<StudentResponse> getAllStudent(String name ,Integer minAge, Integer maxAge, Pageable pageable) {
+		
+		logger.info("Fetching All Students with name:{} minAge:{} maxAge:{} page:{} size:{}",name,minAge,maxAge,pageable.getPageNumber(),pageable.getPageSize());
 		
 			List<StudentModel>list;
 			
@@ -132,12 +159,16 @@ public class StudentServices {
 
 	        response.add(studentResponse);
 	    }
+	    
+	    logger.info("Fetched All students successfully. the total Students are :{}",response.size());
 
 	    return response;
 	}
 	
 	
 	public StudentResponse getStudentById(String id) {
+		
+		logger.info("Fetching  student with id {}",id);
 		
 	    StudentModel response= studentRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Student Not Found with id: "+id));
 	    
@@ -147,6 +178,8 @@ public class StudentServices {
 		studentResponse.setName(response.getName());
 		studentResponse.setEmail(response.getEmail());
 		studentResponse.setAge(response.getAge());
+		
+		logger.info("Fetched  Student with id {}",id);
 	    
 	    return studentResponse;
 	}
