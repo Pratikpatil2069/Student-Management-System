@@ -29,6 +29,14 @@ Day1:
 		-- This connects the application to MongoDB.
 		-- If studentdb is not present, MongoDB creates it automatically when the first document is inserted.
 
+-- @SpringBootApplication:- it is main annotation ,it contains three sub main annotations.
+			1.@Configuration:-It allows Spring to use this class as a source of configuration.
+			
+			2.@EnableAutoConfiguration:-Look at the dependencies I have added and automatically configure the application.
+			
+			3.@ComponentScan:-Find Spring components in this package and its sub-packages. and register as to ioc.
+				
+
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
 Day2:
@@ -187,4 +195,116 @@ Day 9:-
 				search the record by using name and maxAge And minAge .
 				Ex= ?page=0&size=2&sort=name,asc&name=pra
 				
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Day 10:-
+		Logger:-
+			Logging is the process of recording important events happening inside an application.
+			In Spring Boot, we use SLF4J + Logback and create a logger using LoggerFactory. 
+			The main log levels are 
+				INFO for normal operations, 
+				WARN for unusual or invalid situations, 
+				ERROR for unexpected failures. 
+				For unexpected exceptions, we can use logger.error("Unexpected error occurred", ex) to print the complete stack trace.
+			We use {} as a placeholder instead of string concatenation, 
+			for example logger.info("Student created with id: {}", id). Logging helps with debugging, monitoring, and finding errors without using System.out.println(). 
+			
+/*
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Day 11:-
+        Authentication & Authorization
+
+        Authentication:-
+                Authentication verifies who the user is.
+                Example: Login using username and password.
+
+        Authorization:-
+                Authorization checks what an authenticated user is allowed to do.
+                Example: ADMIN can add, update and delete records,
+                while USER has only the permissions assigned to their role.
+
+        1. Spring Security:-
+                Used to secure REST APIs and control access to endpoints.
+                It checks whether a request is authenticated and authorized.
+
+        2. Password Hashing using BCrypt:-
+                BCrypt is used to hash passwords before storing them in the database.
+                Passwords are not stored as plain text.
+                BCrypt hashes cannot be directly decrypted.
+                During login, the entered password is checked against the stored hash.
+
+        3. User Registration:-
+                Allows a new user to create an account using registration details.
+                The password is hashed before saving the user in MongoDB.
+
+        4. Login:-
+                Verifies the user's credentials.
+                If the credentials are valid, the application generates a JWT token.
+
+        5. JWT (JSON Web Token):-
+                JWT is used to represent authenticated user information.
+                The client sends the token with subsequent API requests.
+
+                Authorization Header:
+                Authorization: Bearer <JWT_TOKEN>
+
+        6. JwtAuthenticationFilter:-
+                Extends OncePerRequestFilter.
+                Reads the JWT token from the Authorization header.
+                Validates the token and extracts the username and role.
+                If valid, it stores the user's authentication details
+                in the Spring SecurityContext.
+
+        7. Roles (ADMIN and USER):-
+                Roles are used to control access to application features.
+
+                ADMIN:- Can perform operations permitted to administrators.
+                USER:- Can perform operations permitted to regular users.
+
+                Example:
+                GET    → View records
+                POST   → Add records
+                PUT    → Update records
+                DELETE → Delete records
+
+                Access depends on the permissions configured for each role.
+
+        8. Security Configuration (SecurityConfig):-
+                Configures Spring Security rules.
+
+                - permitAll() → Allows access without authentication.
+                - authenticated() → Requires an authenticated user.
+                - hasRole("ADMIN") → Requires the ADMIN role.
+                - hasAnyRole("USER", "ADMIN") → Allows either role.
+                - SessionCreationPolicy.STATELESS → Does not use HTTP sessions
+                  to maintain authentication between requests.
+                - addFilterBefore() → Adds the JWT filter before the
+                  UsernamePasswordAuthenticationFilter.
+
+        Request Flow:-
+
+                Register User
+                      ↓
+                Login with Credentials
+                      ↓
+                Generate JWT Token
+                      ↓
+                Send Request with Bearer Token
+                      ↓
+                JWT Authentication Filter
+                      ↓
+                Validate Token and Identify Role
+                      ↓
+                Check Authorization Rules
+                      ↓
+                Controller → Service → Repository → MongoDB
+
+        Important:
+                Authentication identifies the user.
+                Authorization decides what the user can access.
+                JWT carries claims; Spring Security uses the validated
+                authentication and configured authorization rules to
+                control access to protected APIs.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 */
