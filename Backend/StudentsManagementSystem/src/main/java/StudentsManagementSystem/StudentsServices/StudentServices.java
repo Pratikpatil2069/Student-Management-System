@@ -1,6 +1,7 @@
 package StudentsManagementSystem.StudentsServices;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,18 @@ import org.springframework.stereotype.Service;
 
 import StudentsManagementSystem.Exceptions.DuplicateResourceException;
 import StudentsManagementSystem.Exceptions.ResourceNotFoundException;
+import StudentsManagementSystem.StudentsDTO.StudentCursorResponse;
 import StudentsManagementSystem.StudentsDTO.StudentRequest;
 import StudentsManagementSystem.StudentsDTO.StudentResponse;
 import StudentsManagementSystem.StudentsModel.StudentModel;
+import StudentsManagementSystem.StudentsProjection.StudentNameAgeProjection;
 import StudentsManagementSystem.StudentsRepository.StudentRepository;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +35,9 @@ public class StudentServices {
 
     @Autowired
     private StudentRepository studentRepository;
+    
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @PreAuthorize("hasRole('ADMIN')")
     public StudentResponse addStudent(StudentRequest studentRequest) {
@@ -212,5 +224,73 @@ public class StudentServices {
         logger.info("Fetched Student with id {}", id);
 
         return studentResponse;
+    }
+    
+    public List<StudentNameAgeProjection> getStudentNamesAndAges() {
+        return studentRepository.findAllProjectedBy();
+    }
+    
+    public List<StudentModel> getStudentsByCursor(String cursor, int size) {
+
+        Query query = new Query();
+
+        // Apply cursor condition only when cursor is provided
+        if (cursor != null && !cursor.isEmpty()) {
+
+            if (!ObjectId.isValid(cursor)) {
+                throw new IllegalArgumentException("Invalid cursor ID");
+            }
+
+            query.addCriteria(
+                Criteria.where("_id").gt(new ObjectId(cursor))
+            );
+        }
+
+        // Sort by ID in ascending order
+        query.with(Sort.by(Sort.Direction.ASC, "_id"));
+
+        // Fetch one extra record to check whether another page exists
+        query.limit(size + 1);
+
+        return mongoTemplate.find(query, StudentModel.class);
+    }
+    
+    public StudentCursorResponse getStudentCursorPage(String cursor, int size) {
+
+        List<StudentModel> students = getStudentsByCursor(cursor, size);
+
+        boolean hasNext = students.size() > size;
+
+        if (hasNext) {
+            students.remove(size);
+        }
+
+        List<StudentResponse> responseList = new ArrayList<>();
+
+        for (StudentModel student : students) {
+
+            StudentResponse response = new StudentResponse();
+
+            response.setId(student.getId());
+            response.setName(student.getName());
+            response.setEmail(student.getEmail());
+            response.setAge(student.getAge());
+
+            responseList.add(response);
+        }
+
+        String nextCursor = null;
+
+        if (!students.isEmpty()) {
+            nextCursor = students.get(students.size() - 1).getId();
+        }
+
+        StudentCursorResponse result = new StudentCursorResponse();
+
+        result.setStudentsList(responseList);
+        result.setNextId(nextCursor);
+        result.setHasNext(hasNext);
+
+        return result;
     }
 }

@@ -96,6 +96,7 @@ public class UserServices {
         response.setToken(token);
         response.setUsername(user.getUsername());
         response.setRole(user.getRole());
+        
 
         return response;
     }

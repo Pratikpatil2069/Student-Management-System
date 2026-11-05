@@ -3,12 +3,15 @@ package StudentsManagementSystem.StudentsRepository;
 
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import StudentsManagementSystem.StudentsModel.StudentModel;
+import StudentsManagementSystem.StudentsProjection.StudentNameAgeProjection;
 
 @Repository
 public interface StudentRepository extends MongoRepository<StudentModel,String> {
@@ -22,4 +25,6 @@ public interface StudentRepository extends MongoRepository<StudentModel,String> 
 	  Page<StudentModel> findByAgeLessThanEqual(Integer maxAge, Pageable pageable);
 	  
 	  Page<StudentModel> findByAgeBetween(Integer minAge, Integer maxAge, Pageable pageable);
+	  
+	  List<StudentNameAgeProjection> findAllProjectedBy();
 }

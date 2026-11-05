@@ -29,8 +29,10 @@ import org.springframework.http.ResponseEntity;
 import StudentsManagementSystem.StudentsServices.StudentServices;
 import jakarta.validation.Valid;
 import StudentsManagementSystem.Response.ResponseApi;
+import StudentsManagementSystem.StudentsDTO.StudentCursorResponse;
 import StudentsManagementSystem.StudentsDTO.StudentRequest;
 import StudentsManagementSystem.StudentsDTO.StudentResponse;
+import StudentsManagementSystem.StudentsProjection.StudentNameAgeProjection;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -88,6 +90,26 @@ public class StudentController {
 	    
 	    return ResponseEntity.ok(response);
 	    
+	}
+	
+	@GetMapping("/summary")
+	public ResponseEntity<ResponseApi<List<StudentNameAgeProjection>>> getStudentSummary() {
+
+	    List<StudentNameAgeProjection> students = studentservices.getStudentNamesAndAges();
+
+	    ResponseApi<List<StudentNameAgeProjection>> response = new ResponseApi<>(true,"Student summary fetched successfully",students,LocalDateTime.now());
+
+	    return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/cursor")
+	public ResponseEntity<ResponseApi<StudentCursorResponse>> getStudentsByCursor(@RequestParam(required = false) String cursor, @RequestParam(defaultValue = "3") int size) {
+
+	    StudentCursorResponse students = studentservices.getStudentCursorPage(cursor, size);
+
+	    ResponseApi<StudentCursorResponse> response = new ResponseApi<>(true,"Students fetched successfully",students, LocalDateTime.now());
+
+	    return ResponseEntity.ok(response);
 	}
 
 }

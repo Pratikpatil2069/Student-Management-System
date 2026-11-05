@@ -307,4 +307,36 @@ Day 11:-
                 control access to protected APIs.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	Day 12:-
+	
+		Database-Level Improvements:-
+		
+			1. MongoDB Indexing 
+				- Unique Index
+				- Single Field Index
+				- Compound Index
+			
+			2. Query Optimization 
+				- IXSCAN vs COLLSCAN
+				- explain() and execution statistics
+			
+			3. MongoDB Schema Validation 
+				- Required fields
+				- Data type validation
+				- Minimum and maximum value validation
+				- Strict validation level and error action
+			
+			4. Duplicate Key Exception Handling 
+				- Handling MongoDB duplicate key errors
+				- Returning proper HTTP 409 Conflict response
+			
+			5. DTO vs Projection 
+				- DTO for controlling API response data
+				- Interface-based projection for fetching selected fields
+			
+			6. Cursor-Based Pagination 
+				- Using MongoDB ObjectId as a cursor
+				- Fetching records using _id with $gt
+				- Sorting and limiting results
+				- Returning nextCursor and hasNext
 */
